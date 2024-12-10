@@ -42,12 +42,14 @@ router.post('/signin', async (req, res) => {
     if (!phoneNumber || !password) {
       return res.status(400).json({ message: 'Phone number and password are required' });
     }
+
       const trimmedPhoneNumber = phoneNumber.trim();
     // Find user by phone number
     const user = await User.findOne({ phoneNumber: trimmedPhoneNumber });
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
-    }
+    }else{
+
     // Generate JWT token
     if (!process.env.JWT_SECRET) {
       return res.status(500).json({ message: 'JWT_SECRET is not set' });
@@ -55,20 +57,23 @@ router.post('/signin', async (req, res) => {
 
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-    res.status(200).json({ message: 'Sign-in successful', token });
+    //res.status(200).json({ message: 'Sign-in successful', token });
+//    res.sendFile(path.join(__dirname, 'home.html'));
+    res.sendFile('./home.html');
+}
   } catch (error) {
     console.error('Error in /signin:', error);  // Log complete error object
     res.status(500).json({ message: 'Internal Server Error', error: error.message });  // Include the error message
   }
    // Trim the phone number and password to remove any leading/trailing spaces
 
-           const isPasswordValid = await bcrypt.compare(trimmedPassword, user.password);
-             if (!isPasswordValid) {
-               return res.status(401).json({ message: 'Invalid credentials' });
-             }
 
 
 
+});
+
+router.get('home', (req, res) => {
+  res.sendFile('./home.html');
 });
 
 module.exports = router;
