@@ -15,17 +15,24 @@ connectDB();
 
 const app = express();
 app.use(cors());
+app.use(express.urlencoded({extended: true}));
 
 // Middleware to parse JSON requests
-app.use(express.json());
+//app.use(express.json());
 
 // Serve main page
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'HTML', 'mainPage.html'));
 });
+app.get('/home', (req, res) => {
+  res.sendFile(path.join(__dirname, 'home.html'));
+});
 
 // Use user routes
 app.use('/api/users', userRoutes);
+
+app.use('/Images', express.static('Images'));
+
 
 // Logging incoming requests
 app.use((req, res, next) => {
@@ -38,3 +45,4 @@ const PORT = process.env.PORT || 5002;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
+
